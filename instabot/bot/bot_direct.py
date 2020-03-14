@@ -14,7 +14,9 @@ def send_message(self, text, user_ids, thread_id=None):
     """
     user_ids = _get_user_ids(self, user_ids)
     if not isinstance(text, str) and isinstance(user_ids, (list, str)):
-        self.logger.error("Text must be an string, user_ids must be an list or string")
+        self.logger.error(
+            "Text must be an string, user_ids must be an list or string"
+        )
         return False
 
     if self.reached_limit("messages"):
@@ -30,7 +32,9 @@ def send_message(self, text, user_ids, thread_id=None):
         self.total["messages"] += 1
         return True
 
-    self.logger.info("Message to {user_ids} wasn't sent".format(user_ids=user_ids))
+    self.logger.info("Message to {user_ids} wasn't sent".format(
+        user_ids=user_ids)
+    )
     return False
 
 
@@ -43,7 +47,7 @@ def send_messages(self, text, user_ids):
     for user in tqdm(user_ids):
         if not self.send_message(text, user):
             self.error_delay()
-            broken_items = user_ids[user_ids.index(user) :]
+            broken_items = user_ids[user_ids.index(user):]
             break
     return broken_items
 
@@ -59,7 +63,9 @@ def send_media(self, media_id, user_ids, text="", thread_id=None):
     """
     user_ids = _get_user_ids(self, user_ids)
     if not isinstance(text, str) and not isinstance(user_ids, (list, str)):
-        self.logger.error("Text must be an string, user_ids must be an list or string")
+        self.logger.error(
+            "Text must be an string, user_ids must be an list or string"
+        )
         return False
     if self.reached_limit("messages"):
         self.logger.info("Out of messages for today.")
@@ -80,7 +86,9 @@ def send_media(self, media_id, user_ids, text="", thread_id=None):
         self.total["messages"] += 1
         return True
 
-    self.logger.info("Message to {user_ids} wasn't sent".format(user_ids=user_ids))
+    self.logger.info("Message to {user_ids} wasn't sent".format(
+        user_ids=user_ids)
+    )
     return False
 
 
@@ -93,7 +101,7 @@ def send_medias(self, media_id, user_ids, text):
     for user in tqdm(user_ids):
         if not self.send_media(media_id, user, text):
             self.error_delay()
-            broken_items = user_ids[user_ids.index(user) :]
+            broken_items = user_ids[user_ids.index(user):]
             break
     return broken_items
 
@@ -109,7 +117,9 @@ def send_hashtag(self, hashtag, user_ids, text="", thread_id=None):
     """
     user_ids = _get_user_ids(self, user_ids)
     if not isinstance(text, str) and not isinstance(user_ids, (list, str)):
-        self.logger.error("Text must be an string, user_ids must be an list or string")
+        self.logger.error(
+            "Text must be an string, user_ids must be an list or string"
+        )
         return False
 
     if self.reached_limit("messages"):
@@ -123,7 +133,9 @@ def send_hashtag(self, hashtag, user_ids, text="", thread_id=None):
         self.total["messages"] += 1
         return True
 
-    self.logger.info("Message to {user_ids} wasn't sent".format(user_ids=user_ids))
+    self.logger.info("Message to {user_ids} wasn't sent".format(
+        user_ids=user_ids)
+    )
     return False
 
 
@@ -139,7 +151,9 @@ def send_profile(self, profile_user_id, user_ids, text="", thread_id=None):
     profile_id = self.convert_to_user_id(profile_user_id)
     user_ids = _get_user_ids(self, user_ids)
     if not isinstance(text, str) and not isinstance(user_ids, (list, str)):
-        self.logger.error("Text must be an string, user_ids must be an list or string")
+        self.logger.error(
+            "Text must be an string, user_ids must be an list or string"
+        )
         return False
 
     if self.reached_limit("messages"):
@@ -148,11 +162,17 @@ def send_profile(self, profile_user_id, user_ids, text="", thread_id=None):
 
     self.delay("message")
     if self.api.send_direct_item(
-        "profile", user_ids, text=text, thread=thread_id, profile_user_id=profile_id
+        "profile",
+        user_ids,
+        text=text,
+        thread=thread_id,
+        profile_user_id=profile_id
     ):
         self.total["messages"] += 1
         return True
-    self.logger.info("Message to {user_ids} wasn't sent".format(user_ids=user_ids))
+    self.logger.info("Message to {user_ids} wasn't sent".format(
+        user_ids=user_ids)
+    )
     return False
 
 
@@ -165,7 +185,9 @@ def send_like(self, user_ids, thread_id=None):
     """
     user_ids = _get_user_ids(self, user_ids)
     if not isinstance(user_ids, (list, str)):
-        self.logger.error("Text must be an string, user_ids must be an list or string")
+        self.logger.error(
+            "Text must be an string, user_ids must be an list or string"
+        )
         return False
 
     if self.reached_limit("messages"):
@@ -176,7 +198,9 @@ def send_like(self, user_ids, thread_id=None):
     if self.api.send_direct_item("like", user_ids, thread=thread_id):
         self.total["messages"] += 1
         return True
-    self.logger.info("Message to {user_ids} wasn't sent".format(user_ids=user_ids))
+    self.logger.info("Message to {user_ids} wasn't sent".format(
+        user_ids=user_ids)
+    )
     return False
 
 
@@ -233,4 +257,6 @@ def approve_pending_thread_requests(self):
             if self.api.last_response.status_code == 200:
                 self.logger.info("Approved thread: {}".format(thread_id))
             else:
-                self.logger.error("Could not approve thread {}".format(thread_id))
+                self.logger.error(
+                    "Could not approve thread {}".format(thread_id)
+                )
